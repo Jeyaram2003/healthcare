@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedInsight Pro – Healthcare Analytics</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="landing-body">
+
+<!-- Animated background -->
+<div class="bg-animated">
+  <div class="bg-circle c1"></div>
+  <div class="bg-circle c2"></div>
+  <div class="bg-circle c3"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="landing-nav">
+  <div class="nav-brand">
+    <i class="fa-solid fa-heart-pulse nav-icon"></i>
+    <span>MedInsight <span class="accent">Pro</span></span>
+  </div>
+  <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fa-solid fa-shield-halved"></i> HIPAA-Ready Analytics Platform</div>
+    <h1 class="hero-title">
+      Intelligent Healthcare<br/>
+      <span class="gradient-text">Analytics Dashboard</span>
+    </h1>
+    <p class="hero-subtitle">
+      Transform patient data into actionable insights with real-time analytics,
+      AI-powered readmission prediction, and comprehensive hospital performance monitoring.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('login') }}" class="btn-primary">
+        <i class="fa-solid fa-chart-line"></i> Get Started
+      </a>
+      <a href="#features" class="btn-ghost">
+        <i class="fa-solid fa-play"></i> Learn More
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="stat-num">500+</span><span class="stat-lbl">Patients</span></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat"><span class="stat-num">9</span><span class="stat-lbl">Modules</span></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat"><span class="stat-num">AI</span><span class="stat-lbl">Powered</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="dashboard-preview">
+      <div class="preview-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="preview-title">Live Dashboard</span>
+      </div>
+      <div class="preview-metrics">
+        <div class="pm"><div class="pm-icon blue"><i class="fa-solid fa-users"></i></div><div><div class="pm-val">1,247</div><div class="pm-lbl">Patients</div></div></div>
+        <div class="pm"><div class="pm-icon green"><i class="fa-solid fa-bed"></i></div><div><div class="pm-val">87%</div><div class="pm-lbl">Bed Occ.</div></div></div>
+        <div class="pm"><div class="pm-icon purple"><i class="fa-solid fa-dollar-sign"></i></div><div><div class="pm-val">$24K</div><div class="pm-lbl">Avg Cost</div></div></div>
+        <div class="pm"><div class="pm-icon orange"><i class="fa-solid fa-star"></i></div><div><div class="pm-val">4.2</div><div class="pm-lbl">Satisfaction</div></div></div>
+      </div>
+      <div class="preview-chart">
+        <div class="chart-bars">
+          <div class="bar b1" style="height:60%"></div>
+          <div class="bar b2" style="height:80%"></div>
+          <div class="bar b3" style="height:45%"></div>
+          <div class="bar b4" style="height:90%"></div>
+          <div class="bar b5" style="height:70%"></div>
+          <div class="bar b6" style="height:55%"></div>
+          <div class="bar b7" style="height:85%"></div>
+        </div>
+        <div class="chart-line">
+          <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+            <polyline points="0,50 30,35 60,42 90,20 120,30 150,15 200,22" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-linecap="round"/>
+            <polyline points="0,50 30,35 60,42 90,20 120,30 150,15 200,22 200,60 0,60" fill="url(#grad)" opacity="0.3"/>
+            <defs><linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#4f8ef7"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="section-label">CAPABILITIES</div>
+  <h2 class="section-title">Everything you need to <span class="gradient-text">optimize care</span></h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="fc-icon blue"><i class="fa-solid fa-chart-pie"></i></div>
+      <h3>Overview Dashboard</h3>
+      <p>Real-time KPIs: total patients, readmission rates, bed occupancy, and revenue at a glance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon green"><i class="fa-solid fa-user-injured"></i></div>
+      <h3>Patient Analytics</h3>
+      <p>Deep dive into age distribution, gender breakdown, and departmental patient flow.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon purple"><i class="fa-solid fa-stethoscope"></i></div>
+      <h3>Doctor Performance</h3>
+      <p>Track physician caseloads, patient satisfaction scores, and average length of stay.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon orange"><i class="fa-solid fa-dollar-sign"></i></div>
+      <h3>Revenue Analytics</h3>
+      <p>Department-wise revenue, high-cost procedure analysis, insurance coverage trends.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon red"><i class="fa-solid fa-virus"></i></div>
+      <h3>Disease Trends</h3>
+      <p>Monitor disease frequency, seasonal patterns, and demographic correlations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon teal"><i class="fa-solid fa-robot"></i></div>
+      <h3>AI Readmission Prediction</h3>
+      <p>Random Forest ML model predicts 30-day readmission risk with configurable inputs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon indigo"><i class="fa-solid fa-bed-pulse"></i></div>
+      <h3>Resource Utilization</h3>
+      <p>Bed occupancy rates, length of stay by department, and capacity planning insights.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon pink"><i class="fa-solid fa-face-smile"></i></div>
+      <h3>Patient Satisfaction</h3>
+      <p>Score distributions, department comparisons, and satisfaction trend analysis over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Demo credentials -->
+<section class="demo-section">
+  <div class="demo-card">
+    <div class="demo-icon"><i class="fa-solid fa-key"></i></div>
+    <h2>Demo Access</h2>
+    <p>Use any of the following credentials to explore the dashboard</p>
+    <div class="cred-grid">
+      <div class="cred"><span class="cred-role admin">Administrator</span><code>admin / admin123</code></div>
+      <div class="cred"><span class="cred-role doctor">Doctor</span><code>doctor / doctor123</code></div>
+      <div class="cred"><span class="cred-role analyst">Analyst</span><code>analyst / analyst123</code></div>
+    </div>
+    <a href="{{ url_for('login') }}" class="btn-primary mt-2">Access Dashboard <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</section>
+
+<footer class="landing-footer">
+  <div class="footer-brand">
+    <i class="fa-solid fa-heart-pulse"></i> MedInsight Pro
+  </div>
+  <p>Healthcare Analytics Dashboard &copy; 2024 &nbsp;|&nbsp; Built for College Internship Project</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign In – MedInsight Pro</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="login-body">
+
+<div class="login-split">
+  <!-- Left panel -->
+  <div class="login-left">
+    <div class="login-left-content">
+      <div class="ll-brand">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>MedInsight <span class="accent">Pro</span></span>
+      </div>
+      <h2>Intelligent Healthcare<br/>Analytics Platform</h2>
+      <p>Access real-time patient insights, predictive analytics, and comprehensive hospital performance metrics.</p>
+      <div class="ll-features">
+        <div class="ll-f"><i class="fa-solid fa-check-circle"></i> AI-Powered Readmission Prediction</div>
+        <div class="ll-f"><i class="fa-solid fa-check-circle"></i> Real-time KPI Monitoring</div>
+        <div class="ll-f"><i class="fa-solid fa-check-circle"></i> Upload CSV / Excel Data</div>
+        <div class="ll-f"><i class="fa-solid fa-check-circle"></i> Interactive Charts & Reports</div>
+      </div>
+      <div class="ll-back"><a href="{{ url_for('landing') }}"><i class="fa-solid fa-arrow-left"></i> Back to Home</a></div>
+    </div>
+    <div class="ll-deco">
+      <div class="deco-circle d1"></div>
+      <div class="deco-circle d2"></div>
+    </div>
+  </div>
+
+  <!-- Right panel / form -->
+  <div class="login-right">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="login-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to your MedInsight Pro account</p>
+      </div>
+
+      {% if error %}
+      <div class="alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('login') }}" class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username"><i class="fa-solid fa-user"></i> Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password"/>
+            <button type="button" class="pw-toggle" onclick="togglePw()"><i class="fa-solid fa-eye" id="eyeIcon"></i></button>
+          </div>
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span id="loginText"><i class="fa-solid fa-right-to-bracket"></i> Sign In</span>
+          <span id="loginLoader" style="display:none"><i class="fa-solid fa-spinner fa-spin"></i> Signing in…</span>
+        </button>
+      </form>
+
+      <div class="demo-creds-box">
+        <p class="demo-label"><i class="fa-solid fa-info-circle"></i> Demo Credentials</p>
+        <div class="demo-cred-row" onclick="fillCred('admin','admin123')">
+          <span class="role-badge admin">Admin</span> <code>admin</code> / <code>admin123</code>
+        </div>
+        <div class="demo-cred-row" onclick="fillCred('doctor','doctor123')">
+          <span class="role-badge doctor">Doctor</span> <code>doctor</code> / <code>doctor123</code>
+        </div>
+        <div class="demo-cred-row" onclick="fillCred('analyst','analyst123')">
+          <span class="role-badge analyst">Analyst</span> <code>analyst</code> / <code>analyst123</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePw() {
+  const pw = document.getElementById('password');
+  const ic = document.getElementById('eyeIcon');
+  if (pw.type === 'password') { pw.type = 'text'; ic.className = 'fa-solid fa-eye-slash'; }
+  else { pw.type = 'password'; ic.className = 'fa-solid fa-eye'; }
+}
+function fillCred(u, p) {
+  document.getElementById('username').value = u;
+  document.getElementById('password').value = p;
+}
+document.getElementById('loginForm').addEventListener('submit', function(){
+  document.getElementById('loginText').style.display = 'none';
+  document.getElementById('loginLoader').style.display = 'inline';
+  document.getElementById('loginBtn').disabled = true;
+});
+</script>
+</body>
+</html>

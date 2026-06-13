@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard – MedInsight Pro</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="app-body">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <i class="fa-solid fa-heart-pulse brand-icon"></i>
+    <div class="brand-text">
+      <span class="brand-name">MedInsight</span>
+      <span class="brand-sub">Pro</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">MAIN</div>
+    <a class="nav-item active" data-module="overview" onclick="showModule('overview',this)">
+      <i class="fa-solid fa-gauge-high"></i><span>Overview</span>
+    </a>
+    <a class="nav-item" data-module="patients" onclick="showModule('patients',this)">
+      <i class="fa-solid fa-user-injured"></i><span>Patient Analytics</span>
+    </a>
+    <a class="nav-item" data-module="revenue" onclick="showModule('revenue',this)">
+      <i class="fa-solid fa-dollar-sign"></i><span>Revenue Analytics</span>
+    </a>
+    <a class="nav-item" data-module="diseases" onclick="showModule('diseases',this)">
+      <i class="fa-solid fa-virus"></i><span>Disease Trends</span>
+    </a>
+    <div class="nav-section-label">CLINICAL</div>
+    <a class="nav-item" data-module="doctors" onclick="showModule('doctors',this)">
+      <i class="fa-solid fa-stethoscope"></i><span>Doctor Analytics</span>
+    </a>
+    <a class="nav-item" data-module="resources" onclick="showModule('resources',this)">
+      <i class="fa-solid fa-bed-pulse"></i><span>Resources</span>
+    </a>
+    <a class="nav-item" data-module="satisfaction" onclick="showModule('satisfaction',this)">
+      <i class="fa-solid fa-face-smile"></i><span>Satisfaction</span>
+    </a>
+    <div class="nav-section-label">AI & INSIGHTS</div>
+    <a class="nav-item" data-module="prediction" onclick="showModule('prediction',this)">
+      <i class="fa-solid fa-robot"></i><span>Readmission AI</span>
+      <span class="nav-badge">AI</span>
+    </a>
+    <div class="nav-section-label">DATA</div>
+    <a class="nav-item" data-module="datatable" onclick="showModule('datatable',this)">
+      <i class="fa-solid fa-table"></i><span>Data Table</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sf-user">
+      <div class="sf-avatar">{{ username[0].upper() }}</div>
+      <div class="sf-info">
+        <div class="sf-name">{{ username }}</div>
+        <div class="sf-role">{{ role }}</div>
+      </div>
+    </div>
+    <a href="{{ url_for('logout') }}" class="sf-logout" title="Logout">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main-content" id="mainContent">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="topbar-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-breadcrumb">
+        <span id="breadcrumbText">Overview</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <!-- Upload button -->
+      <div class="upload-area" id="uploadArea">
+        <label for="fileUpload" class="btn-upload" id="uploadLabel">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload Data
+        </label>
+        <input type="file" id="fileUpload" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleUpload(this)"/>
+        <span class="upload-status" id="uploadStatus"></span>
+      </div>
+      <div class="topbar-date"><i class="fa-regular fa-calendar"></i> <span id="todayDate"></span></div>
+      <a href="{{ url_for('logout') }}" class="btn-logout-top">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="module-container">
+
+    <!-- OVERVIEW -->
+    <div id="mod-overview" class="module active">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-gauge-high"></i> Overview Dashboard</h2>
+        <p>Hospital performance at a glance</p>
+      </div>
+      <div class="kpi-grid" id="overviewKPIs"></div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-building-columns"></i> Patients by Department</div><canvas id="deptChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-virus"></i> Disease Distribution</div><canvas id="diseaseChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-venus-mars"></i> Gender Distribution</div><canvas id="genderChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-calendar-days"></i> Monthly Admissions</div><canvas id="monthlyChart"></canvas></div>
+      </div>
+      <div class="chart-card full-width mt">
+        <div class="cc-title"><i class="fa-solid fa-table-list"></i> Recent Patients</div>
+        <div id="previewTable"></div>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div id="mod-patients" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-user-injured"></i> Patient Analytics</h2>
+        <p>Demographic and admission insights</p>
+      </div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-chart-bar"></i> Age Distribution</div><canvas id="ageChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-venus-mars"></i> Gender Split</div><canvas id="genderChart2"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-building-columns"></i> Avg Age by Department</div><canvas id="ageByDeptChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-rotate-right"></i> Previous Admissions</div><canvas id="prevAdmChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- REVENUE -->
+    <div id="mod-revenue" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-dollar-sign"></i> Revenue Analytics</h2>
+        <p>Financial performance and cost analysis</p>
+      </div>
+      <div class="kpi-grid" id="revenueKPIs"></div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-building-columns"></i> Revenue by Department</div><canvas id="revDeptChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-pills"></i> Avg Cost by Disease</div><canvas id="costDiseaseChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-shield"></i> Insurance Coverage Spread</div><canvas id="insuranceChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-chart-line"></i> Monthly Cost Trend</div><canvas id="costTrendChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- DISEASES -->
+    <div id="mod-diseases" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-virus"></i> Disease Trends</h2>
+        <p>Disease frequency and demographic patterns</p>
+      </div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-chart-bar"></i> Disease Frequency</div><canvas id="disFreqChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-users"></i> Avg Patient Age by Disease</div><canvas id="disAgeChart"></canvas></div>
+      </div>
+      <div class="chart-card full-width mt"><div class="cc-title"><i class="fa-solid fa-chart-line"></i> Disease Trends Over Time</div><canvas id="disTrendChart" style="max-height:280px"></canvas></div>
+    </div>
+
+    <!-- DOCTORS -->
+    <div id="mod-doctors" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-stethoscope"></i> Doctor Analytics</h2>
+        <p>Physician performance and patient outcomes</p>
+      </div>
+      <div id="doctorWarning" class="info-banner" style="display:none">
+        <i class="fa-solid fa-info-circle"></i> No doctor column found in uploaded dataset. Showing sample data.
+      </div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-user-doctor"></i> Patients per Doctor</div><canvas id="docPatChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-star"></i> Avg Satisfaction per Doctor</div><canvas id="docSatChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-clock"></i> Avg Length of Stay</div><canvas id="docLosChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-dollar-sign"></i> Avg Cost per Doctor</div><canvas id="docCostChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div id="mod-resources" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-bed-pulse"></i> Resource Utilization</h2>
+        <p>Bed occupancy and capacity management</p>
+      </div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-bed"></i> Bed Occupancy Status</div><canvas id="bedChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-building-columns"></i> Occupied Beds by Department</div><canvas id="occDeptChart"></canvas></div>
+        <div class="chart-card full-span"><div class="cc-title"><i class="fa-solid fa-clock"></i> Avg Length of Stay by Department</div><canvas id="losDeptChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- SATISFACTION -->
+    <div id="mod-satisfaction" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-face-smile"></i> Patient Satisfaction</h2>
+        <p>Satisfaction scores and trends</p>
+      </div>
+      <div class="charts-grid two-col">
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-chart-bar"></i> Score Distribution</div><canvas id="satDistChart"></canvas></div>
+        <div class="chart-card"><div class="cc-title"><i class="fa-solid fa-building-columns"></i> Avg Score by Department</div><canvas id="satDeptChart"></canvas></div>
+      </div>
+      <div class="chart-card full-width mt"><div class="cc-title"><i class="fa-solid fa-chart-line"></i> Satisfaction Trend</div><canvas id="satTrendChart"></canvas></div>
+    </div>
+
+    <!-- PREDICTION -->
+    <div id="mod-prediction" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-robot"></i> AI Readmission Predictor</h2>
+        <p>Machine learning model to predict 30-day readmission risk</p>
+      </div>
+      <div class="ai-section">
+        <div class="ai-left">
+          <div class="chart-card">
+            <div class="cc-title"><i class="fa-solid fa-brain"></i> Feature Importance</div>
+            <canvas id="featImpChart"></canvas>
+          </div>
+          <div class="chart-card mt">
+            <div class="cc-title"><i class="fa-solid fa-chart-pie"></i> Model Accuracy</div>
+            <div class="accuracy-display" id="accuracyDisplay">
+              <div class="acc-circle"><span id="accValue">–</span><small>Accuracy</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="ai-right">
+          <div class="predict-form-card">
+            <div class="pf-header">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <h3>Predict Readmission</h3>
+              <p>Enter patient details to predict 30-day readmission risk</p>
+            </div>
+            <div class="pf-body">
+              <div class="pf-row">
+                <div class="pf-field">
+                  <label><i class="fa-solid fa-calendar"></i> Age</label>
+                  <input type="number" id="pred_age" value="45" min="0" max="120"/>
+                </div>
+                <div class="pf-field">
+                  <label><i class="fa-solid fa-clock"></i> Length of Stay (days)</label>
+                  <input type="number" id="pred_los" value="5" min="0" max="60"/>
+                </div>
+              </div>
+              <div class="pf-row">
+                <div class="pf-field">
+                  <label><i class="fa-solid fa-rotate-right"></i> Previous Admissions</label>
+                  <input type="number" id="pred_prev" value="1" min="0" max="20"/>
+                </div>
+                <div class="pf-field" id="diagField">
+                  <label><i class="fa-solid fa-virus"></i> Diagnosis</label>
+                  <select id="pred_diag"></select>
+                </div>
+              </div>
+              <button class="btn-predict" onclick="runPrediction()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Run Prediction
+              </button>
+              <div class="predict-result" id="predictResult" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA TABLE -->
+    <div id="mod-datatable" class="module">
+      <div class="module-header">
+        <h2><i class="fa-solid fa-table"></i> Patient Data Table</h2>
+        <p>Browse and explore full dataset</p>
+      </div>
+      <div class="chart-card">
+        <div id="tableContainer"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+  </div><!-- end module-container -->
+</main>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader-box">
+    <i class="fa-solid fa-heart-pulse fa-spin loader-icon"></i>
+    <p>Loading data…</p>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
